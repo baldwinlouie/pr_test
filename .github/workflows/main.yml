@@ -18,3 +18,13 @@ jobs:
       - uses: amannn/action-semantic-pull-request@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Requires: '#' -> digits -> space -> an uppercase letter -> the rest of the description
+          subjectPattern: '^#\d+ [A-Z].*$'
+          
+          # Updated error message to explicitly mention the uppercase requirement
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern. 
+            Please ensure that your PR title follows the format: <type>: #ISSUE_NUMBER <Description>
+            The description MUST start with an uppercase letter.
+            Example: feat: #123 Add new feature
