@@ -6,14 +6,14 @@ on:
       - opened
       - reopened
       - edited
-      # - synchronize (if you use required Actions)
+      - synchronize
 
 jobs:
   main:
     name: Validate PR title
     runs-on: ubuntu-slim
     permissions:
-      pull-requests: read
+      pull-requests: write
     steps:
       - uses: amannn/action-semantic-pull-request@v6
         env:
@@ -28,3 +28,22 @@ jobs:
             Please ensure that your PR title follows the format: <type>: #ISSUE_NUMBER <Description>
             The description MUST start with an uppercase letter.
             Example: feat: #123 Add new feature
+      # Post a comment if the validation failed
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: always() && (steps.lint_pr_title.outputs.error_message != null)
+        with:
+          header: pr-title-lint-error
+          message: |
+            Hey there! 👋 It looks like your PR title needs a quick adjustment.
+            
+            Details:
+            ```text
+            ${{ steps.lint_pr_title.outputs.error_message }}
+            ```
+
+      # Delete the comment once the user fixes the title
+      - if: ${{ steps.lint_pr_title.outputs.error_message == null }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr-title-lint-error
+          delete: true
