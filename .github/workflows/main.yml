@@ -1,4 +1,4 @@
-name: 'PR Title Validation'
+name: 'Lint PR'
 
 on:
   pull_request_target:
@@ -11,23 +11,22 @@ on:
 jobs:
   main:
     name: Validate PR title
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      pull-requests: write # Changed to 'write' so the bot can post comments
     steps:
       - uses: amannn/action-semantic-pull-request@v6
+        id: lint_pr_title # Added an ID so we can reference this step's outputs later
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # Requires: '#' -> digits -> space -> an uppercase letter -> the rest of the description
           subjectPattern: '^#\d+ [A-Z].*$'
-          
-          # Updated error message to explicitly mention the uppercase requirement
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern. 
             Please ensure that your PR title follows the format: <type>: #ISSUE_NUMBER <Description>
             The description MUST start with an uppercase letter.
             Example: feat: #123 Add new feature
+
       # Post a comment if the validation failed
       - uses: marocchino/sticky-pull-request-comment@v2
         if: always() && (steps.lint_pr_title.outputs.error_message != null)
