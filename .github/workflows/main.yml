@@ -36,7 +36,8 @@ jobs:
             ### 🛠️ Quick Title Fix Required
             
             Your PR title needs to be updated to match our project's format:
-            `type: #IssueNumber Description`
+            
+            > `type: #IssueNumber Description`
 
             **Your specific error:**
             > ${{ steps.lint_pr_title.outputs.error_message }}
