@@ -22,10 +22,16 @@ jobs:
         with:
           subjectPattern: '^#\d+ [A-Z].*$'
           subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern. 
-            Please ensure that your PR title follows the format: <type>: #ISSUE_NUMBER <Description>
+            The subject "{subject}" found in the pull request "{title}" doesn't follow the Conventional Commit specification. 
+            
+            Please ensure that your PR title follows the format: <type>: <#Issue Number> <Description>
+            
             The description MUST start with an uppercase letter.
-            Example: feat: #123 Add new feature
+            
+            Examples: 
+              - feat: #123 Add new feature
+              - fix: #234 Fix bug in component
+              - feat(api)!: #987 Updated core library
 
       # Post a comment if the validation failed
       - uses: marocchino/sticky-pull-request-comment@v2
@@ -33,12 +39,9 @@ jobs:
         with:
           header: pr-title-lint-error
           message: |
-            Hey there! 👋 It looks like your PR title needs a quick adjustment.
-            
-            Details:
-            ```text
+            👋 It looks like your PR title needs a quick adjustment.
+
             ${{ steps.lint_pr_title.outputs.error_message }}
-            ```
 
       # Delete the comment once the user fixes the title
       - if: ${{ steps.lint_pr_title.outputs.error_message == null }}
