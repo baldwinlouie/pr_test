@@ -33,17 +33,22 @@ jobs:
         with:
           header: pr-title-lint-error
           message: |
-            ### ⚠️ PR Title Adjustment Needed
+            ### 🛠️ Quick Title Fix Required
             
-            To keep our project history clean and support automated changelogs, we require PR titles to follow a specific format.
-            
-            **The Error:**
+            Your PR title needs to be updated to match our project's format:
+            `type: #IssueNumber Description`
+
+            **Your specific error:**
             > ${{ steps.lint_pr_title.outputs.error_message }}
-            
-            **Please update your PR title to match one of these examples:**
+
+            **Correct Examples:**
             - `feat: #123 Add new feature`
-            - `fix(api): #234 Resolve connection timeout`
+            - `fix(api): #234 Fix connection bug`
             - `docs: #45 Update README documentation`
+
+            ---
+            *Note: This project follows the **Conventional Commit** specification.*
+            *💡 You can edit the PR title directly in the GitHub UI to fix this.*
 
       # Delete the comment once the user fixes the title
       - if: ${{ steps.lint_pr_title.outputs.error_message == null }}
